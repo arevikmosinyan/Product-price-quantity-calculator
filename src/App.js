@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import CreatingProduct from './components/CreatingProductSection';
+import { makeStyles } from '@material-ui/core';
 
 function App() {
+  const classes = useStyles();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={classes.containerOfCreatingProductComponent}>
+      <CreatingProduct />
     </div>
   );
 }
 
 export default App;
+/*------------------------------------------------------------Styles------------------------------------------ */
+
+const useStyles = makeStyles({
+  containerOfCreatingProductComponent: {
+    backgroundColor: 'rgb(174, 83, 83)', //rose
+    border: '2px rgb(20, 33, 155) solid',
+    borderRadius: 15,
+    // display: 'flex',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+  },
+});
+
+/*----------------------------------------------------------------------------------------------------------*/
