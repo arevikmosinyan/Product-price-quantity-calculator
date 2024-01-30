@@ -113,6 +113,7 @@ const CreatingProductSection = () => {
       price: price,
       id: uuidv4(),
       defaultQuantityToBeChanged: 0,
+      previouslyBoughtQuantity: 0,
     });
     setName('');
     setQuantity('');
@@ -192,7 +193,7 @@ export default CreatingProductSection;
 /*----------------------------------------------Styles-------------------------------------------------------------*/
 const useStyles = makeStyles({
   containerOfInputsAndAgGridComponent: {
-    backgroundColor: 'green',
+    // backgroundColor: 'green',
   },
   containerOfInputs: {
     display: 'flex',
@@ -201,10 +202,11 @@ const useStyles = makeStyles({
     borderRadius: 15,
     padding: 20,
     margin: 50,
-    backgroundColor: 'blue',
+    // backgroundColor: 'blue',
+    height: '10%',
   },
   containerOfAgGridComponent: {
-    backgroundColor: 'yellow',
+    // backgroundColor: 'yellow',
     display: 'flex',
     justifyContent: 'space-around',
     border: '1px rgb(20, 33, 155) solid',

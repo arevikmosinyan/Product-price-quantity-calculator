@@ -6,6 +6,7 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import QuantityChanger from './QuantityChanger';
+import PercentageChanger from './PercentageChanger';
 import ButtonRenderer from './ButtonRenderer';
 
 const AgGridSection = (props) => {
@@ -14,38 +15,38 @@ const AgGridSection = (props) => {
   const [
     dataFromChildQuantityChangerComponent,
     setDataFromChildQuantityChangerComponent,
-  ] = useState('hello');
-  const stateRef = useRef();
-  stateRef.current = dataFromChildQuantityChangerComponent;
+  ] = useState(0);
+
+  const stateOfQuantityChangerRef = useRef();
+  stateOfQuantityChangerRef.current = +dataFromChildQuantityChangerComponent;
+
+  const [
+    dataFromChildPercentageChangerComponent,
+    setDataFromChildPercentageChangerComponent,
+  ] = useState(0);
+
+  const stateOfPercentageChangerRef = useRef();
+  stateOfPercentageChangerRef.current = dataFromChildPercentageChangerComponent;
+
+  const [disableSubmitButton, setDisableSubmitButton] = useState(true);
 
   const [rowData, setRowData] = useState(
     JSON.parse(localStorage.getItem('rowData')) || [],
   );
+  const rowDataRef = useRef();
+  rowDataRef.current = rowData;
 
   const [initial, setInitial] = useState(false);
 
   const [selectedProduct, setSelectedProduct] = useState({});
-  // const [selectedProductId, setSelectedProductId] = useState('');
+
   const [enableDeleteButton, setEnableDeleteButton] = useState(false);
-  const [enableSelectAllButton, setEnableSelectAllButton] = useState(false);
-  // const [theCellWhichMustNotBeSelected, setTheCellWhichMustNotBeSelected] =
-  //   useState(null);
   const [percentage, setPercentage] = useState(0);
+
   const [submittingProductId, setSubmittingProductId] = useState(null);
-  // const [updatingSubmittingProductId, setUpdatingSubmittingProductId] =
-  //   useState(null);
+  const submittingProductIdRef = useRef();
+  submittingProductIdRef.current = submittingProductId;
   const [submittingProductQuantity, setSubmittingProductQuantity] = useState(0);
-
-  // const [cellId, setCellId] = useState(null);
-  // const [clickedNode, setClickedNode] = useState(null);
-  // const [clickedRowUUID, setClickedRowUUID] = useState(null);
-  // const [clickedRowUUIDState, setClickedRowUUIDState] = useState(null);
-  // const [newProductState, setNewProductState] = useState(props.newProduct);
-  // const [newProductIdState, setNewProductIdState] = useState(
-  //   props.newProduct.id,
-  // );
-
-  // const [updatedRowData, setUpdatedRowData] = useState([]);
 
   const gridRef = useRef(null);
 
@@ -106,16 +107,24 @@ const AgGridSection = (props) => {
 
     {
       field: 'percentageToIncreaseTheSoldProductPrice',
+      headerName: 'Percentage (%)',
       filter: false,
-      valueSetter: (params) => {
-        if (numberRegex.test(params.newValue)) {
-          params.data.percentageToIncreaseTheSoldProductPrice = params.newValue;
-          setPercentage(params.newValue);
-          return true;
-        } else {
-          return false;
-        }
+      cellRenderer: PercentageChanger,
+      cellRendererParams: {
+        functionOfPercentageChanger: handleDataFromChildPercentageChanger,
       },
+      // valueSetter: (params) => {
+      //   if (numberRegex.test(params.newValue)) {
+      //     params.data.percentageToIncreaseTheSoldProductPrice = params.newValue;
+      //     setPercentage(params.newValue);
+      //     return true;
+      //   } else {
+      //     return false;
+      //   }
+      // },
+      editable: false,
+      suppressCellSelection: true,
+      cellStyle: { width: '' },
     },
     {
       field: 'defaultQuantityToBeChanged',
@@ -123,8 +132,16 @@ const AgGridSection = (props) => {
       filter: false,
       cellRenderer: QuantityChanger,
       cellRendererParams: {
-        functionOfQuantityChanger: handleDataFromChild,
+        functionOfQuantityChanger: handleDataFromChildQuantityChanger,
       },
+      editable: false,
+      suppressCellSelection: true,
+      cellStyle: { width: '' },
+    },
+    {
+      field: 'previouslyBoughtQuantity',
+      headerName: 'Previously bought',
+      filter: false,
       editable: false,
       suppressCellSelection: true,
       cellStyle: { width: '' },
@@ -135,9 +152,8 @@ const AgGridSection = (props) => {
       filter: false,
       cellRenderer: ButtonRenderer,
       cellRendererParams: {
-        functionOfButtonRenderer: updateDataOfTheBoughtProduct,
-        // parameterForfunctionOfButtonRenderer:
-        //   dataFromChildQuantityChangerComponent,
+        functionOfButtonRenderer: () => updateDataOfTheBoughtProduct(),
+        disableSubmitButton: disableSubmitButton,
       },
       editable: false,
       suppressCellSelection: true,
@@ -154,152 +170,99 @@ const AgGridSection = (props) => {
   );
   /*-------------------------------------------------------------------------------------------------------------------------*/
 
-  // console.log(rowData, 'rowData out of function');
+  function totalSumToSubtractFromProductsThatAreNotBoughtFunc() {
+    let productWhichWasSubmited = rowDataRef.current.find((elem) => {
+      return submittingProductIdRef.current === elem.id;
+    });
 
-  function handleDataFromChild(data) {
-    console.log(data + 'data');
-    setDataFromChildQuantityChangerComponent(data);
+    return (
+      0.01 *
+      +stateOfPercentageChangerRef.current *
+      +productWhichWasSubmited.price
+    );
   }
-  console.log(JSON.stringify(rowData) + 'rowData out of function1111111');
+
+  // function boughtQuantity() {
+  //   let productWhichWasSubmited = rowDataRef.current.find((elem) => {
+  //     return submittingProductIdRef.current === elem.id;
+  //   });
+  //   if (
+  //     submittingProductIdRef.current === productWhichWasSubmited.id &&
+  //     (stateOfQuantityChangerRef.current !== '0' ||
+  //       stateOfQuantityChangerRef.current.trim() !== '')
+  //   ) {
+  //     return stateOfQuantityChangerRef.current;
+  //   } else {
+  //     return 'hello';
+  //   }
+  // }
 
   function updateDataOfTheBoughtProduct() {
-    console.log(rowData, 'rowData in the function'); //rowData tesnum em miayn reload ic heto
+    let totalSumToSubtractFromProductsThatAreNotBought =
+      totalSumToSubtractFromProductsThatAreNotBoughtFunc();
 
-    // rowData.forEach((obj, index) => {
-    //   console.log(`Object at index ${index}: ${JSON.stringify(obj)}`);
-    // });
+    const result = rowDataRef.current.map((elem) => {
+      let countOfProductsWithoutBoughtProduct = rowDataRef.current.length - 1;
+      let sumToSubtractFromTheSingleProductPriceWhichIsNotBought;
 
-    // console.log(
-    //   `dataFromChildQuantityChangerComponent in the function ${stateRef.current}`, //ok chi yete dataFromChildQuantityChangerComponent em console.log anum
-    // );
-    console.log(5);
+      if (submittingProductIdRef.current === elem.id) {
+        return {
+          ...elem,
+          quantity: elem.quantity - stateOfQuantityChangerRef.current,
+          previouslyBoughtQuantity:
+            elem.previouslyBoughtQuantity + stateOfQuantityChangerRef.current,
+          price: +elem.price + totalSumToSubtractFromProductsThatAreNotBought,
+        };
+      } else {
+        sumToSubtractFromTheSingleProductPriceWhichIsNotBought =
+          totalSumToSubtractFromProductsThatAreNotBought /
+          countOfProductsWithoutBoughtProduct;
 
-    let result = rowData.map((elem, index) => {
-      // console.log(elem.quantity + 'elem.quantity');
-      // console.log(stateRef.current + 'stateRef.current');
-      console.log(4);
-      console.log(rowData + 'rowData');
-      return elem;
+        return {
+          ...elem,
+          price:
+            +elem.price -
+            sumToSubtractFromTheSingleProductPriceWhichIsNotBought,
+        };
+      }
     });
-    console.log(6);
-    // console.log(
-    //   `difference: ${rowData.map((obj, index) => {
-    //     return JSON.stringify({
-    //       ...obj,
-    //       quantity: obj.quantity - stateRef.current,
-    //     });
-    //   })}`,
-    // );
-    //   //   // const selectedNodes = gridRef.current.api.getSelectedNodes();
-    //   //   // console.log(selectedNodes); //[{...data,parent...},{...data,parent...}]
-    //   //   // const selectedData = selectedNodes.map((node) => node.data);
-    //   //   // console.log(selectedData); // [{name:'apple',price:500,quantity:5,id:45216},{name:'peach',price:600,quantity:6,id:4521654263}]
 
-    // let boughtProduct = rowData.find((singleProduct) => {
-    // console.log(`${JSON.stringify(singleProduct)}`); //ok
-    // console.log(`props.newProduct.id: ${props.newProduct.id}`); //undefined
-    // console.log(`props.newProduct: ${JSON.stringify(props.newProduct)}`); //{}
-    // console.log(`singleProduct.id: ${singleProduct.id}`); //ok
-    // console.log(`singleProduct: ${JSON.stringify(singleProduct)}`); //ok
-    // console.log(`submittingProductId: ${submittingProductId}`); //null/im tvac initial value-n e
-    // console.log(`updatingSubmittingProductId:${updatingSubmittingProductId}`);
-    // console.log(`cellId:${cellId}`);
-    // return submittingProductId === singleProduct.id;
-    // });
-
-    // let boughtProductName = boughtProduct.name;
-
-    // let boughtProductQuantity = boughtProduct.quantity;
-
-    // let boughtProductPrice = boughtProduct.price;
-
-    // console.log(`${boughtProduct} after hi`); //undefined after hi
-
-    //   //   // /* let TotalSumToAddToProductsThatAreNotBought = boughtProductPrice * 0.01 * percentage */
-    //   //   // let TotalSumToSubtractedFromProductsThatAreNotBought;
-
-    //   //   // /*  if (!percentage) {
-    //   //   //     TotalSumToSubtractedFromProductsThatAreNotBought = boughtProductPrice//Եթե տոկոս չեն տալիս
-    //   //   //     } else { */
-    //   //   // TotalSumToSubtractedFromProductsThatAreNotBought =
-    //   //   //   boughtProductPrice * 0.01 * percentage;
-    //   //   // /*  } */
-
-    //   //   // let countOfProductsWithoutBoughtProduct = rowData.length - 1;
-
-    //   //   // let sumToSubtractFromTheSingleProductPriceWhichIsNotBought =
-    //   //   //   TotalSumToSubtractedFromProductsThatAreNotBought /
-    //   //   //   countOfProductsWithoutBoughtProduct;
-
-    //   //   // let result = rowData.map((elem, index) => {
-    //   //   //   if (elem.nameOfProduct === boughtProductName) {
-    //   //   //     return {
-    //   //   //       nameOfProduct: elem.nameOfProduct,
-    //   //   //       /*  priceOfSingle: elem.priceOfSingle - TotalSumToAddToProductsThatAreNotBought, */
-    //   //   //       priceOfSingle:
-    //   //   //         elem.priceOfSingle +
-    //   //   //         TotalSumToSubtractedFromProductsThatAreNotBought,
-    //   //   //       quantity: elem.quantity - 1,
-    //   //   //     };
-    //   //   //   } else {
-    //   //   //     return {
-    //   //   //       nameOfProduct: elem.nameOfProduct,
-    //   //   //       priceOfSingle:
-    //   //   //         elem.priceOfSingle -
-    //   //   //         sumToSubtractFromTheSingleProductPriceWhichIsNotBought,
-    //   //   //       quantity: elem.quantity,
-    //   //   //     };
-    //   //   //   }
-    //   //   // });
     setRowData(result);
     return result;
   }
+
+  function handleDataFromChildQuantityChanger(data) {
+    setDisableSubmitButton(false);
+    console.log(disableSubmitButton + 'disableSubmitButton');
+    console.log(
+      stateOfQuantityChangerRef.current + 'stateOfQuantityChangerRef.current',
+    );
+    console.log(data + 'data');
+    setDataFromChildQuantityChangerComponent(data);
+  }
+
+  function handleDataFromChildPercentageChanger(data) {
+    setDataFromChildPercentageChangerComponent(data);
+  }
+
   /*----------------------------------------------onCellClick+++---------------------------------------------------*/
-  const cellClickedListener = useCallback(
-    (event) => {
-      if (
-        event.column.getColId() === 'defaultQuantityToBeChanged' ||
-        event.column.getColId() === 'percentageToIncreaseTheSoldProductPrice' ||
-        event.column.getColId() === 'submitChanges'
-      ) {
-        const rowNode = event.node;
-        // setTheCellWhichMustNotBeSelected(rowNode);
-
-        if (rowNode.isSelected()) {
-          rowNode.setSelected(false);
-        }
+  const cellClickedListener = (event) => {
+    if (
+      event.column.getColId() === 'defaultQuantityToBeChanged' ||
+      event.column.getColId() === 'percentageToIncreaseTheSoldProductPrice' ||
+      event.column.getColId() === 'submitChanges'
+    ) {
+      const rowNode = event.node;
+      if (rowNode.isSelected()) {
+        rowNode.setSelected(false);
       }
-      // const cellId = event.column.getColDef().field;
-      // setCellId(cellId);
-      // console.log(`cellId11111111111: ${cellId}2222`); //cellId11111111111: submitChanges2222
-      // setClickedNode(event.node);
-      // setClickedRowID(event.data.id);
-      // console.log('clickedRowUUID updated: event.data.id', event.data.id); //ok//sa AGGridi tvac ID-n e
-      // console.log('cellClicked  : event', event); //ok
-      setEnableDeleteButton(true);
-      // setSelectedProductId(props.newProduct.id);
-      setSubmittingProductId(event.data.id);
-      setSubmittingProductQuantity(event.data.quantity);
-      // console.log(`submittingProductId:${submittingProductId}555555555555`);
-      // console.log(`${props.newProduct.id} onCellClicked props.newProduct.id`); //undefined//sa im tvac uuid-n e
-    },
-    [props.newProduct.id],
-  );
-
-  useEffect(() => {
-    // console.log(`submittingProductId:${submittingProductId}77777777`);
-    // setUpdatingSubmittingProductId(() => {
-    //   return submittingProductId;
-    // });
-    // console.log(
-    //   `submittingProductQuantity:${submittingProductQuantity}  88888888`,
-    // );
-    // console.log(
-    //   `${
-    //     submittingProductQuantity - stateRef.current
-    //   }:submittingProductQuantity- dataFromChild`,
-    // );
-  }, [submittingProductId, submittingProductQuantity]);
+    }
+    const boughtProduct = rowDataRef.current.find(
+      (product) => product.id === event.data.id,
+    );
+    setSubmittingProductId(boughtProduct?.id);
+    setEnableDeleteButton(true);
+  };
 
   /*-------------------------------------------------------------------------------------------------------------*/
 
@@ -308,7 +271,6 @@ const AgGridSection = (props) => {
   const onSelectionChanged = () => {
     const selectedNodes = gridRef.current.api.getSelectedNodes();
     const isNameFieldChecked = selectedNodes.find((node) => node.data.name);
-
     setEnableDeleteButton(!!isNameFieldChecked);
   };
 
@@ -317,10 +279,7 @@ const AgGridSection = (props) => {
   /*------------------------------------------------- Remove the product-------------------------------------*/
   function onRemove() {
     const selectedNodes = gridRef.current.api.getSelectedNodes();
-    // console.log(selectedNodes); //[{...data,parent...},{...data,parent...}]
     const selectedData = selectedNodes.map((node) => node.data);
-    // console.log(selectedData); // [{name:'apple',price:500,quantity:5,id:45216},{name:'peach',price:600,quantity:6,id:4521654263}]
-
     const updatedRowData = rowData.filter((row) => !selectedData.includes(row));
 
     setRowData(updatedRowData);
@@ -337,20 +296,20 @@ const AgGridSection = (props) => {
         if (props.newProduct) {
           return [...prevRowData, props.newProduct];
         }
-        if (selectedProduct) {
-          return [...prevRowData, selectedProduct];
-        }
+        // if (selectedProduct) {
+        //   return [...prevRowData, selectedProduct];
+        // }
 
         return prevRowData;
       });
     }
-  }, [props.newProduct, selectedProduct]);
+  }, [props.newProduct]);
 
   /*------------------------------------------------Setting in the localStorage the updated rowData------------------------ */
 
   useEffect(() => {
     if (!initial) {
-      setInitial(true); //to prevent updating the rowdata with an empty line on  mount phass
+      setInitial(true); //to prevent updating the rowdata with an empty line on  mount phase
     } else {
       localStorage.setItem(
         'rowData',
@@ -368,10 +327,6 @@ const AgGridSection = (props) => {
   /*------------------------------------------------------------------------------------------------------------------------ */
   /*-------------------------------------------------------------------------------------------------------------------------*/
 
-  // const frameworkComponents = {
-  //   quantityEditor: QuantityEditor,
-  // };
-
   return (
     <div>
       <div className={classes.agGridContainerWithButton}>
@@ -383,7 +338,7 @@ const AgGridSection = (props) => {
           className={classes.commonButton}>
           Delete selected products
         </Button>
-        {/* <div className={classes.agGrid}> */}
+
         <div class='ag-theme-alpine' style={{ height: '80%', width: '100%' }}>
           <AgGridReact
             ref={gridRef}
@@ -394,10 +349,7 @@ const AgGridSection = (props) => {
             rowSelection='multiple'
             onCellClicked={cellClickedListener}
             onSelectionChanged={onSelectionChanged}
-            // frameworkComponents={{ QuantityChanger: QuantityChanger }}
-            // isRowSelectable={isRowSelectable}
           />
-          {/* </div> */}
         </div>
       </div>
       <div></div>
@@ -410,7 +362,7 @@ export default AgGridSection;
 const useStyles = makeStyles({
   agGridContainerWithButton: {
     width: 1200,
-    height: 800,
+    height: 500,
   },
   commonButton: {
     marginTop: 15,

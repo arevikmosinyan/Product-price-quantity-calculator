@@ -1,29 +1,18 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
 
 const ButtonRenderer = (props) => {
-  const classes = useStyles();
-
-  // const handleSubmit = useCallback(() => {
-  //   // props.functionOfButtonRenderer(props.parameterForfunctionOfButtonRenderer);
-  //   props.functionOfButtonRenderer();
-  //   // console.log(
-  //   //   'Data from parent:',
-  //   //   props.parameterForfunctionOfButtonRenderer,
-  //   // );
-  // }, [props]);
-  function handleSubmit() {
-    props.functionOfButtonRenderer();
-  }
-
   return (
     <div>
       <Button
+        disabled={props.disableSubmitButton}
+        type='button'
         color='primary'
         variant='contained'
-        onClick={handleSubmit}
-        className={classes.submitButton}>
+        onClick={() => {
+          return props.functionOfButtonRenderer();
+        }}>
         Submit
       </Button>
     </div>
@@ -32,6 +21,3 @@ const ButtonRenderer = (props) => {
 
 export default ButtonRenderer;
 /*---------------------------------------------------------------------Styles--------------------------------*/
-const useStyles = makeStyles((theme) => ({
-  submitButton: {},
-}));

@@ -15,12 +15,11 @@ export default App;
 
 const useStyles = makeStyles({
   containerOfCreatingProductComponent: {
-    backgroundColor: 'rgb(174, 83, 83)', //rose
-    border: '2px rgb(20, 33, 155) solid',
+    // backgroundColor: 'rgb(174, 83, 83)', //rose
+    // border: '2px rgb(20, 33, 155) solid',
     borderRadius: 15,
-    // display: 'flex',
-    // justifyContent: 'center',
-    // alignItems: 'center',
+    width: '100vw',
+    height: '100vh',
   },
 });
 
