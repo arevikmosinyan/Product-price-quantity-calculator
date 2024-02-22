@@ -28,7 +28,10 @@ const AgGridSection = (props) => {
   const stateOfPercentageChangerRef = useRef();
   stateOfPercentageChangerRef.current = dataFromChildPercentageChangerComponent;
 
-  const [disableSubmitButton, setDisableSubmitButton] = useState(true);
+  const [disableSubmitButton, setDisableSubmitButton] = useState(false);
+
+  const disableSubmitButtonRef = useRef();
+  disableSubmitButtonRef.current = disableSubmitButton;
 
   const [rowData, setRowData] = useState(
     JSON.parse(localStorage.getItem('rowData')) || [],
@@ -153,7 +156,7 @@ const AgGridSection = (props) => {
       cellRenderer: ButtonRenderer,
       cellRendererParams: {
         functionOfButtonRenderer: () => updateDataOfTheBoughtProduct(),
-        disableSubmitButton: disableSubmitButton,
+        disableSubmitButton: disableSubmitButtonRef.current,
       },
       editable: false,
       suppressCellSelection: true,
@@ -233,7 +236,9 @@ const AgGridSection = (props) => {
 
   function handleDataFromChildQuantityChanger(data) {
     setDisableSubmitButton(false);
-    console.log(disableSubmitButton + 'disableSubmitButton');
+    console.log(
+      disableSubmitButtonRef.current + 'disableSubmitButton in the function',
+    );
     console.log(
       stateOfQuantityChangerRef.current + 'stateOfQuantityChangerRef.current',
     );
@@ -244,7 +249,9 @@ const AgGridSection = (props) => {
   function handleDataFromChildPercentageChanger(data) {
     setDataFromChildPercentageChangerComponent(data);
   }
-
+  console.log(
+    disableSubmitButtonRef.current + 'disableSubmitButton out of function',
+  );
   /*----------------------------------------------onCellClick+++---------------------------------------------------*/
   const cellClickedListener = (event) => {
     if (
