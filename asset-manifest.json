@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Product-price-quantity-calculator/static/css/main.72917375.css",
+    "main.js": "/Product-price-quantity-calculator/static/js/main.49234f48.js",
+    "static/js/787.9e4e749f.chunk.js": "/Product-price-quantity-calculator/static/js/787.9e4e749f.chunk.js",
+    "index.html": "/Product-price-quantity-calculator/index.html",
+    "main.72917375.css.map": "/Product-price-quantity-calculator/static/css/main.72917375.css.map",
+    "main.49234f48.js.map": "/Product-price-quantity-calculator/static/js/main.49234f48.js.map",
+    "787.9e4e749f.chunk.js.map": "/Product-price-quantity-calculator/static/js/787.9e4e749f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.72917375.css",
+    "static/js/main.49234f48.js"
+  ]
+}
