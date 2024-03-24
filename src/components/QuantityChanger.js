@@ -2,6 +2,15 @@ import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useState } from 'react';
 
+// const useStyles = makeStyles({
+//   containerOfQuantityChanger: {
+//     width: '100%',
+//   },
+//   input: {
+//     width: '100%',
+//   },
+// });
+
 const QuantityChanger = (props) => {
   const [value, setValue] = useState('');
   // const [disableSubmitButton, setDisableSubmitButton] = useState(true);

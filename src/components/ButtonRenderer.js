@@ -7,6 +7,7 @@ const ButtonRenderer = (props) => {
     <div>
       <Button
         disabled={props.disableSubmitButton}
+        // style={{ width: '100%' }}
         type='button'
         color='primary'
         variant='contained'

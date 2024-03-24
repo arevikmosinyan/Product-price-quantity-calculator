@@ -13,14 +13,13 @@ function App() {
 export default App;
 /*------------------------------------------------------------Styles------------------------------------------ */
 
+/*----------------------------------------------------------------------------------------------------------*/
 const useStyles = makeStyles({
-  containerOfCreatingProductComponent: {
-    // backgroundColor: 'rgb(174, 83, 83)', //rose
-    // border: '2px rgb(20, 33, 155) solid',
-    borderRadius: 15,
-    width: '100vw',
-    height: '100vh',
+  appContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh',
+    padding: '20px',
   },
 });
-
-/*----------------------------------------------------------------------------------------------------------*/

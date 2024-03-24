@@ -8,9 +8,11 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import QuantityChanger from './QuantityChanger';
 import PercentageChanger from './PercentageChanger';
 import ButtonRenderer from './ButtonRenderer';
+import '../assets/styles/customStyles.css';
 
 const AgGridSection = (props) => {
   const classes = useStyles();
+  const [gridApiInitialized, setGridApiInitialized] = useState(false);
 
   const [
     dataFromChildQuantityChangerComponent,
@@ -171,6 +173,16 @@ const AgGridSection = (props) => {
     }),
     [],
   );
+
+  useEffect(() => {
+    if (gridRef.current && !gridApiInitialized) {
+      const gridApi = gridRef.current.api;
+      if (gridApi) {
+        gridApi.sizeColumnsToFit();
+        setGridApiInitialized(true);
+      }
+    }
+  }, [gridApiInitialized]);
   /*-------------------------------------------------------------------------------------------------------------------------*/
 
   function totalSumToSubtractFromProductsThatAreNotBoughtFunc() {
@@ -346,8 +358,9 @@ const AgGridSection = (props) => {
           Delete selected products
         </Button>
 
-        <div class='ag-theme-alpine' style={{ height: '80%', width: '100%' }}>
+        <div class='ag-theme-alpine' style={{ width: '100%', height: '100%' }}>
           <AgGridReact
+            style={{ width: '100%' }}
             ref={gridRef}
             rowData={rowData}
             columnDefs={columnDefs}
@@ -356,6 +369,7 @@ const AgGridSection = (props) => {
             rowSelection='multiple'
             onCellClicked={cellClickedListener}
             onSelectionChanged={onSelectionChanged}
+            domLayout='autoHeight' // Set the domLayout property to autoHeight
           />
         </div>
       </div>
@@ -367,10 +381,7 @@ const AgGridSection = (props) => {
 export default AgGridSection;
 /*----------------------------------------------Styles-------------------------------------------------------------*/
 const useStyles = makeStyles({
-  agGridContainerWithButton: {
-    width: 1200,
-    height: 500,
-  },
+  agGridContainerWithButton: {},
   commonButton: {
     marginTop: 15,
     marginBottom: 15,

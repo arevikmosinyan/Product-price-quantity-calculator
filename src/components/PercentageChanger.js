@@ -13,6 +13,7 @@ const PercentageChanger = (props) => {
 
           props.functionOfPercentageChanger(e.target.value);
         }}
+        // style={{ width: '100%' }}
       />
     </div>
   );
