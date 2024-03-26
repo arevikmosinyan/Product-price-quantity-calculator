@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Product-price-quantity-calculator/static/css/main.72917375.css",
-    "main.js": "/Product-price-quantity-calculator/static/js/main.5f0650fc.js",
+    "main.css": "/Product-price-quantity-calculator/static/css/main.a36d660b.css",
+    "main.js": "/Product-price-quantity-calculator/static/js/main.2214ae09.js",
     "static/js/787.9e4e749f.chunk.js": "/Product-price-quantity-calculator/static/js/787.9e4e749f.chunk.js",
     "index.html": "/Product-price-quantity-calculator/index.html",
-    "main.72917375.css.map": "/Product-price-quantity-calculator/static/css/main.72917375.css.map",
-    "main.5f0650fc.js.map": "/Product-price-quantity-calculator/static/js/main.5f0650fc.js.map",
+    "main.a36d660b.css.map": "/Product-price-quantity-calculator/static/css/main.a36d660b.css.map",
+    "main.2214ae09.js.map": "/Product-price-quantity-calculator/static/js/main.2214ae09.js.map",
     "787.9e4e749f.chunk.js.map": "/Product-price-quantity-calculator/static/js/787.9e4e749f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.72917375.css",
-    "static/js/main.5f0650fc.js"
+    "static/css/main.a36d660b.css",
+    "static/js/main.2214ae09.js"
   ]
 }
