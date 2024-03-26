@@ -1,3 +1,26 @@
+/* .my-ag-grid .ag-root.ag-unselectable.ag-layout-auto-height {
+  width: 100%;
+} */
+
 .my-ag-grid .ag-root.ag-unselectable.ag-layout-auto-height {
   width: 100%;
+}
+.makeStyles-containerOfAgGridComponent-4 > div {
+  width: 100%;
+}
+
+@media only screen and (max-width: 1024px) {
+  .makeStyles-containerOfInputsAndAgGridComponent-2
+    .makeStyles-containerOfAgGridComponent-4 {
+    margin: 8px;
+  }
+  .makeStyles-containerOfInputsAndAgGridComponent-2
+    .makeStyles-containerOfInputs-3 {
+    margin: 8px;
+    flex-wrap: wrap;
+  }
+  .makeStyles-containerOfInputs-3 > div {
+    width: 100%;
+    margin: 10px 0;
+  }
 }
